@@ -123,6 +123,16 @@ GtOllamaClient >> generateResponseWithModel: modelString andPrompt: promptString
 ]
 
 { #category : #accessing }
+GtOllamaClient >> generateResponseWithModel: modelString andPrompt: promptString andSystem: instructions [
+	^ GtOllamaGenerateResponseClient new
+		client: self;
+		model: modelString;
+		prompt: promptString;
+		system: instructions;
+		perform
+]
+
+{ #category : #accessing }
 GtOllamaClient >> generateResponseWithModel: modelString prompt: promptString andImages: anArrayOfStrings [
 	^ GtOllamaGenerateResponseClient new
 		client: self;
