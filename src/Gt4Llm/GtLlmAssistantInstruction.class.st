@@ -102,7 +102,7 @@ GtLlmAssistantInstruction >> communicationConventionsDescription [
 			addItem: 'Always review the full conversation prior to answering and maintain continuity.';
 			addItem: 'Assume the user would like something concise when producing text.';
 			addItem: 'Prefer asking clarifying follow-up questions or using tools (see  the section "Tool use policy") over assumptions, especially when in doubt.';
-			addItem: 'Refuse actions that cannot be performed using your capabilities. When an action is refused, return a textual explanation of why it isn’t possible to fulfill the request.';
+			addItem: 'Refuse actions that cannot be performed using your capabilities. When an action is refused, return a textual explanation of why it isn''t possible to fulfill the request.';
 			addItem: 'Similarly, give a concise description of any error you encounter on tool use or other system errors.'.
 
 	GtLlmFeatures multiStep

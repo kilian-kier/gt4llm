@@ -12,7 +12,7 @@ GtLlmChat >> asViewModel [
 
 { #category : #'*Gt4Llm-GToolkit' }
 GtLlmChat >> gtMessagesWidgetFor: aView [
-	"cannot be a forward because the update wouldn’t work"
+	"cannot be a forward because the update wouldn't work"
 
 	<gtView>
 	self provider ifNil: [ ^ aView empty ].

@@ -22,11 +22,11 @@ GtLlmThreadMessageStyler >> annotations: aListOfAnnotations [
 GtLlmThreadMessageStyler >> privateStyle: aText [
 	| aString aParser |
 	aString := aText asString.
-	aParser := ('【' asPParser , '】' asPParser negate plus token , '】' asPParser)
+	aParser := (' [' asPParser , '] ' asPParser negate plus token , '] ' asPParser)
 			==> [ :tokens | 
 				| annotation |
 				annotation := self annotations
-						at: '【' , tokens second value , '】'
+						at: ' [' , tokens second value , '] '
 						ifAbsent: [ nil ].
 				(aText from: tokens second start - 1 to: tokens second stop + 1)
 					highlight: (annotation

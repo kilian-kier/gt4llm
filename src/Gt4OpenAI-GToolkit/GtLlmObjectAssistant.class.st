@@ -170,7 +170,7 @@ GtLlmObjectAssistant >> getPropertyToolOn: anObject [
 	^ GtLlmFunctionTool new
 		name: 'getObjectProperty';
 		parameters: {'propertyName'};
-		description: 'Returns the property value by name. This can be an arbitrarily deeply nested accessor separated by spaces, including numbers to access a collection’s value by index (example: `property 2 collectionChildProperty`). Indices start at 1, not 0.';
+		description: 'Returns the property value by name. This can be an arbitrarily deeply nested accessor separated by spaces, including numbers to access a collection''s value by index (example: `property 2 collectionChildProperty`). Indices start at 1, not 0.';
 		block: [ :functionCall | 
 			self traverse: anObject using: (' ' split: functionCall anyArgument) ]
 ]

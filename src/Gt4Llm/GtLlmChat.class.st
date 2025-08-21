@@ -89,7 +89,7 @@ GtLlmChat >> descendantOf: aMessage [
 
 { #category : #ui }
 GtLlmChat >> gtMessagesFor: aView [
-	"cannot be a forward because the update wouldn’t work"
+	"cannot be a forward because the update wouldn't work"
 
 	<gtView>
 	^ aView columnedList
