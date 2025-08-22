@@ -3,7 +3,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'connections',
-		'defaultConnection'
+		'defaultConnection',
+		'defaultCodeCompletionConnection'
 	],
 	#classInstVars : [
 		'uniqueInstance'
@@ -83,6 +84,16 @@ GtLlmConnectionRegistry >> connectionFor: aProvider [
 { #category : #'as yet unclassified' }
 GtLlmConnectionRegistry >> connections [
 	^ connections
+]
+
+{ #category : #accessing }
+GtLlmConnectionRegistry >> defaultCodeCompletionConnection [
+	^defaultCodeCompletionConnection
+]
+
+{ #category : #accessing }
+GtLlmConnectionRegistry >> defaultCodeCompletionConnection: anObject [
+	defaultCodeCompletionConnection := anObject
 ]
 
 { #category : #'as yet unclassified' }

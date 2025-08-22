@@ -3,29 +3,45 @@ Extension { #name : #GtLlmConnectionRegistry }
 { #category : #'*Gt4Llm-GToolkit' }
 GtLlmConnectionRegistry >> gtConnectionsFor: aView [
 	<gtView>
-	^ aView columnedList
+	^(aView columnedList)
 		title: 'Connections';
 		priority: 1;
-		items: [ connections ];
+		items: [connections];
 		column: 'Label' text: #label;
 		column: 'Provider' text: #providerName;
 		column: 'Model' text: #model;
 		column: 'Default'
-			icon: [ :aConnection | 
-				aConnection = self defaultConnection
-					ifTrue: [ BrGlamorousVectorIcons accept ]
-					ifFalse: [ BrGlamorousVectorIcons noIcon ] ]
+			icon: 
+				[:aConnection |
+				(self defaultConnection notNil and: [aConnection = self defaultConnection])
+					ifTrue: [BrGlamorousVectorIcons accept]
+					ifFalse: [BrGlamorousVectorIcons noIcon]]
 			width: 60;
+		column: 'Default for code completion'
+			icon: 
+				[:aConnection |
+				(self defaultCodeCompletionConnection notNil
+					and: [aConnection = self defaultCodeCompletionConnection])
+						ifTrue: [BrGlamorousVectorIcons accept]
+						ifFalse: [BrGlamorousVectorIcons noIcon]]
+			width: 180;
 		column: 'Connectable'
-			icon: [ :aConnection | 
+			icon: 
+				[:aConnection |
 				aConnection isConnectable
-					ifTrue: [ BrGlamorousVectorIcons accept ]
-					ifFalse: [ BrGlamorousVectorIcons noIcon ] ]
+					ifTrue: [BrGlamorousVectorIcons accept]
+					ifFalse: [BrGlamorousVectorIcons noIcon]]
 			width: 90;
 		contextItemLabel: 'Make default'
-			action: [ :anItem :aConnection | 
+			action: 
+				[:anItem :aConnection |
 				self defaultConnection: aConnection.
-				anItem anchor phlow fireViewUpdateWish ]
+				anItem anchor phlow fireViewUpdateWish];
+		contextItemLabel: 'Make default for code completion'
+			action: 
+				[:anItem :aConnection |
+				self defaultCodeCompletionConnection: aConnection.
+				anItem anchor phlow fireViewUpdateWish]
 ]
 
 { #category : #'*Gt4Llm-GToolkit' }
