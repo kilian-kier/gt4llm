@@ -30,9 +30,9 @@ GtOllamaCreateModelClient >> modelFile: anObject [
 
 { #category : #accessing }
 GtOllamaCreateModelClient >> request [
-	^ self client
-		postStreaming: '/create'
-		withEntity: {'model' -> self model} asDictionary , self modelFile contentDictionary
+	^self client post: '/create'
+		withEntity: {'model' -> self model} asDictionary
+				, self modelFile contentDictionary
 ]
 
 { #category : #accessing }

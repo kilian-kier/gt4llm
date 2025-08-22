@@ -28,18 +28,13 @@ GtOllamaClient >> initializeClient [
 { #category : #'*Gt4Ollama-GToolkit' }
 GtOllamaClient >> postStreaming: aString withEntity: anEntity [
 	| aClient aResult |
-	aClient := self initializeClient
-			accept: 'application/jsonl,application/x-ndjson';
-			contentReader: [ :entity | (NeoJSONReader on: entity readStream) upToEnd ].
+	aClient := (self initializeClient)
+				streaming: true;
+				contentReader: nil.
 	aClient url: self baseUrl / aString.
-
 	aClient contents: anEntity.
-
 	aResult := aClient post.
-
-	aResult size > 0 ifTrue: [ self checkForErrors: aResult first ].
-
-	history add: (aClient request -> aClient response).
-	
-	^ aResult
+	aResult size > 0 ifTrue: [self checkForErrors: aResult first].
+	history add: aClient request -> aClient response.
+	^aResult
 ]

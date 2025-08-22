@@ -21,8 +21,7 @@ GtLlmEndpointClient >> client: anObject [
 GtLlmEndpointClient >> perform [
 	| aResult |
 	aResult := self request.
-
-	^ (self serializationClass from: aResult) client: self client
+	^(self serializationClass from: aResult) client: self client
 ]
 
 { #category : #accessing }

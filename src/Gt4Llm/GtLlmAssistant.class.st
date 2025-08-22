@@ -62,7 +62,7 @@ GtLlmAssistant >> argumentsFormatDescription [
 
 { #category : #'as yet unclassified' }
 GtLlmAssistant >> buildProvider [
-	^ connection buildProvider
+	^connection ifNil: [nil] ifNotNil: [connection buildProvider]
 ]
 
 { #category : #'as yet unclassified' }

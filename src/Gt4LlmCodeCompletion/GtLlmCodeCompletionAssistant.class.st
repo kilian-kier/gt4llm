@@ -1,26 +1,23 @@
 Class {
 	#name : #GtLlmCodeCompletionAssistant,
 	#superclass : #GtLlmAssistant,
-	#instVars : [
-		'provider'
-	],
-	#classInstVars : [
-		'instance'
-	],
 	#category : #Gt4LlmCodeCompletion
 }
 
-{ #category : #'instance creation' }
-GtLlmCodeCompletionAssistant class >> instance [
-	^ instance ifNil: [ instance := self basicNew initialize ]
+{ #category : #'*Gt4LlmCodeCompletion' }
+GtLlmCodeCompletionAssistant >> codeCompletionOn: aCoderViewModel [
+	^(GtLlmCodeCompletion new)
+		assistant: self;
+		provider: self buildProvider;
+		coderViewModel: aCoderViewModel
 ]
 
 { #category : #instructions }
 GtLlmCodeCompletionAssistant >> codeStyle [
 	<gtLlmInstructionSection>
-	^ GtLlmInstructionSection new
+	^(GtLlmInstructionSection new)
 		title: 'Respect user''s style and context';
-		body: '- Adhere to Smalltalk formatting and naming conventions (e.g., meaningful identifiers, consistent indentation).
+		body: '- Adhere to Pharo formatting and naming conventions (e.g., meaningful identifiers, consistent indentation).
 - Keep code simple, maintainable, and structured for readability.'
 ]
 
@@ -41,9 +38,9 @@ GtLlmCodeCompletionAssistant >> defaultDescription [
 { #category : #instructions }
 GtLlmCodeCompletionAssistant >> exampleResponses [
 	<gtLlmInstructionSection>
-	^ GtLlmInstructionSection new
+	^(GtLlmInstructionSection new)
 		title: 'Example responses';
-		body: '# Regular code completion:
+		body: '## Regular code completion:
 prompt: "factorial
 	| nex nexnext acc |
 	self < 3
@@ -64,7 +61,7 @@ prompt: "factorial
 response: "self odd ifTrue: [ acc := acc * self ].
 	^ acc"
 
-# Fill-in-the-middle completion:
+## Fill-in-the-middle completion:
 prompt: "<fim_prefix>factorial
 	| nex nexnext acc |
 	self < 3
@@ -87,14 +84,6 @@ prompt: "<fim_prefix>factorial
 	response: "self // 2 - 1"'
 ]
 
-{ #category : #actions }
-GtLlmCodeCompletionAssistant >> generateResponseFor: aPromptString [
-	^ self provider client
-		generateResponseWithModel: self provider model
-		andPrompt: aPromptString
-		andSystem: self systemPrompt
-]
-
 { #category : #views }
 GtLlmCodeCompletionAssistant >> gtActionsFor: aView [
 	<gtView>
@@ -110,34 +99,14 @@ GtLlmCodeCompletionAssistant >> gtFormatComponentsFor: aView [
 { #category : #initialization }
 GtLlmCodeCompletionAssistant >> initialize [
 	super initialize.
-	connection := GtLlmConnectionRegistry instance defaultConnection.
-	provider := self buildProvider
+	connection := GtLlmConnectionRegistry uniqueInstance
+				defaultCodeCompletionConnection
 ]
 
 { #category : #instructions }
 GtLlmCodeCompletionAssistant >> initializeInstruction [
 	instruction := GtLlmCodeCompletionAssistantInstruction new.
 	instruction sections: self collectSections
-]
-
-{ #category : #accessing }
-GtLlmCodeCompletionAssistant >> model [
-	^ model
-]
-
-{ #category : #accessing }
-GtLlmCodeCompletionAssistant >> model: anObject [
-	model := anObject
-]
-
-{ #category : #accessing }
-GtLlmCodeCompletionAssistant >> provider [
-	^ provider
-]
-
-{ #category : #accessing }
-GtLlmCodeCompletionAssistant >> provider: anObject [
-	provider := anObject
 ]
 
 { #category : #instructions }

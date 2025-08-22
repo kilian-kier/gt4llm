@@ -19,10 +19,11 @@ GtOllamaGetModelInformationAPIClient >> model: anObject [
 
 { #category : #accessing }
 GtOllamaGetModelInformationAPIClient >> request [
-	^ (self client
-		postStreaming: '/show'
-		withEntity: {'model' -> self model.
-				'verbose' -> true} asDictionary) first
+	^(self client post: '/show'
+		withEntity: 
+			{'model' -> self model.
+			'verbose' -> true} asDictionary)
+			first
 ]
 
 { #category : #accessing }

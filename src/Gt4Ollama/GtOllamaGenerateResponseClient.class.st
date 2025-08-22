@@ -23,19 +23,19 @@ Class {
 { #category : #'as yet unclassified' }
 GtOllamaGenerateResponseClient >> entity [
 	| entity |
-
 	entity := Dictionary new.
 	entity
 		at: 'model' put: model;
 		at: 'prompt' put: prompt.
-	format ifNotNil: [ entity at: 'format' put: format ].
-	images ifNotNil: [ entity at: 'images' put: images ].
-	keep_alive ifNotNil: [ entity at: 'keep_alive' put: keep_alive ].
-	options ifNotNil: [ entity at: 'options' put: options ].
-	suffix ifNotNil: [ entity at: 'suffix' put: suffix ].
-	system ifNotNil: [ entity at: 'system' put: system ].
-	template ifNotNil: [ entity at: 'template' put: template ].
-	^ entity
+	format ifNotNil: [entity at: 'format' put: format].
+	images ifNotNil: [entity at: 'images' put: images].
+	keep_alive ifNotNil: [entity at: 'keep_alive' put: keep_alive].
+	options ifNotNil: [entity at: 'options' put: options].
+	suffix ifNotNil: [entity at: 'suffix' put: suffix].
+	system ifNotNil: [entity at: 'system' put: system].
+	template ifNotNil: [entity at: 'template' put: template].
+	stream ifNotNil: [entity at: 'stream' put: stream].
+	^entity
 ]
 
 { #category : #accessing }
@@ -124,22 +124,22 @@ GtOllamaGenerateResponseClient >> raw: aBoolean [
 
 { #category : #'as yet unclassified' }
 GtOllamaGenerateResponseClient >> request [
-
-	^ self stream 
-		ifTrue: [ self client postStreaming: '/generate' withEntity: self entity ]
-		ifFalse: [ self client post: '/generate' withEntity: self entity ]
+	^self stream
+		ifTrue: [self client postStreaming: '/generate' withEntity: self entity]
+		ifFalse: [self client post: '/generate' withEntity: self entity]
 ]
 
 { #category : #'as yet unclassified' }
 GtOllamaGenerateResponseClient >> serializationClass [
-	^ GtOllamaResponseMessage
+	^self stream
+		ifTrue: [GtOllamaStreamedResponseMessage]
+		ifFalse: [GtOllamaResponseMessage]
 ]
 
 { #category : #accessing }
 GtOllamaGenerateResponseClient >> stream [
 	"If false the response will be returned as a single response object, rather than a stream of objects"
-
-	^ stream ifNil: [ true ]
+	^stream ifNil: [false]
 ]
 
 { #category : #accessing }

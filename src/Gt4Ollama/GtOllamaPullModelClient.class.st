@@ -19,7 +19,7 @@ GtOllamaPullModelClient >> model: anObject [
 
 { #category : #accessing }
 GtOllamaPullModelClient >> request [
-	^ self client postStreaming: '/pull' withEntity: {'model' -> self model} asDictionary
+	^self client post: '/pull' withEntity: {'model' -> self model} asDictionary
 ]
 
 { #category : #accessing }

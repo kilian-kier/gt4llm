@@ -19,7 +19,7 @@ GtOllamaPushModelClient >> model: anObject [
 
 { #category : #accessing }
 GtOllamaPushModelClient >> request [
-	^ self client postStreaming: '/push' withEntity: {'model' -> self model} asDictionary
+	^self client post: '/push' withEntity: {'model' -> self model} asDictionary
 ]
 
 { #category : #accessing }

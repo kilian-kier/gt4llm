@@ -92,8 +92,10 @@ GtLlmConnectionRegistry >> defaultCodeCompletionConnection [
 ]
 
 { #category : #accessing }
-GtLlmConnectionRegistry >> defaultCodeCompletionConnection: anObject [
-	defaultCodeCompletionConnection := anObject
+GtLlmConnectionRegistry >> defaultCodeCompletionConnection: aConnection [
+	defaultCodeCompletionConnection := aConnection.
+	(connections includes: aConnection)
+		ifFalse: [connections add: aConnection]
 ]
 
 { #category : #'as yet unclassified' }
@@ -125,9 +127,10 @@ GtLlmConnectionRegistry >> hasConnectableDefaultConnection [
 { #category : #'as yet unclassified' }
 GtLlmConnectionRegistry >> initialize [
 	super initialize.
-	
 	connections := OrderedCollection withAll: self knownConnectors.
-	self defaultConnection: self standardDefaultConnection
+	self defaultConnection: self standardDefaultConnection.
+	self defaultCodeCompletionConnection: self
+				standardDefaultCodeCompletionConnection
 ]
 
 { #category : #'as yet unclassified' }
@@ -136,6 +139,14 @@ GtLlmConnectionRegistry >> labelForModel: aModel [
 		detect: [ :aConnection | aConnection model = aModel ]
 		ifFound: [ :aConnection | aConnection label ifNil: [ aModel ] ]
 		ifNone: [ aModel ]
+]
+
+{ #category : #accessing }
+GtLlmConnectionRegistry >> standardDefaultCodeCompletionConnection [
+	^(GtLlmConnection new)
+		provider: GtOllamaProvider;
+		label: 'Qwen2.5-Coder';
+		model: 'qwen2.5-coder'
 ]
 
 { #category : #'as yet unclassified' }

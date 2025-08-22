@@ -143,6 +143,17 @@ GtOllamaClient >> generateResponseWithModel: modelString prompt: promptString an
 ]
 
 { #category : #accessing }
+GtOllamaClient >> generateStreamingResponseWithModel: modelString andPrompt: promptString andSystem: instructions [
+	^(GtOllamaGenerateResponseClient new)
+		client: self;
+		model: modelString;
+		prompt: promptString;
+		system: instructions;
+		stream: true;
+		perform
+]
+
+{ #category : #accessing }
 GtOllamaClient >> get: aString [
 	| aClient response |
 	aClient := self initializeClient beOneShot.
