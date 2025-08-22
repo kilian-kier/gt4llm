@@ -44,7 +44,7 @@ GtSourceCoderCodeCompletionShortcut >> performOnEditor: aBrTextEditor element: a
 	prompt := self fillInTheMiddlePromptBetween: prefix and: suffix.
 	assistant := GtLlmCodeCompletionAssistant instance.
 	response := assistant generateResponseFor: prompt.
-	nil halt
+	aBrTextEditor insertString: response content at: cursorPosition
 ]
 
 { #category : #accessing }
