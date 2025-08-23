@@ -28,13 +28,12 @@ GtOllamaClient >> initializeClient [
 { #category : #'*Gt4Ollama-GToolkit' }
 GtOllamaClient >> postStreaming: aString withEntity: anEntity [
 	| aClient aResult |
-	aClient := (self initializeClient)
-				streaming: true;
-				contentReader: nil.
+	aClient := self initializeClient
+			streaming: true;
+			contentReader: nil.
 	aClient url: self baseUrl / aString.
 	aClient contents: anEntity.
 	aResult := aClient post.
-	aResult size > 0 ifTrue: [self checkForErrors: aResult first].
 	history add: aClient request -> aClient response.
-	^aResult
+	^ aResult
 ]

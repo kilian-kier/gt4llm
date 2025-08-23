@@ -37,7 +37,7 @@ GtOllamaStream >> initialize [
 
 { #category : #accessing }
 GtOllamaStream >> isAtEnd [
-	^self responses isEmpty not and: [self responses itemArray last done]
+	^ self responses isEmpty not and: [ self responses itemArray last isDone ]
 ]
 
 { #category : #accessing }

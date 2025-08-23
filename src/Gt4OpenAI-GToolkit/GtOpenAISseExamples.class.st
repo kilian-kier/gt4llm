@@ -529,7 +529,10 @@ GtOpenAISseExamples >> onSimpleStream [
 	
 	self assert: stream events size equals: 2.
 	self assert: stream events first eventType equals: 'response.started'.
-	self assert: stream events first data keys equals: {'hi'. 'λαμβδα'}.
+	self assert: stream events first data keys
+		equals: 
+			{'hi'.
+			#(206 187 206 177 206 188 206 178 206 180 206 177) asByteArray utf8Decoded}.
 	self assert: stream events second data equals: {} asDictionary.
 	
 	^ stream
@@ -540,7 +543,10 @@ GtOpenAISseExamples >> simpleStreamExample [
 	<gtExample>
 	<noTest>
 	^ ('event: response.started
-data: {"hi": 15, "λαμβδα": "unicode"}
+data: {"hi": 15, "'
+		, #(206 187 206 177 206 188 206 178 206 180 206 177) asByteArray
+				utf8Decoded
+			, '": "unicode"}
 
 event: response.completed
 data:  {}'

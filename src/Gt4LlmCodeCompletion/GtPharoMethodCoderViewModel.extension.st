@@ -7,3 +7,8 @@ GtPharoMethodCoderViewModel >> codeCompletion [
 			[self coderModel attributeNamed: #codeCompletion
 				put: (GtLlmCodeCompletionAssistant new codeCompletionOn: self)]
 ]
+
+{ #category : #'*Gt4LlmCodeCompletion' }
+GtPharoMethodCoderViewModel >> hasPendingCodeCompletion [
+	^ (self coderModel attributeNamed: #codeCompletion) notNil
+]

@@ -6,10 +6,20 @@ Class {
 		'coderViewModel',
 		'textEditor',
 		'editorElement',
-		'provider'
+		'provider',
+		'startPosition',
+		'stopPosition',
+		'isDone',
+		'streamedResponse'
 	],
 	#category : #Gt4LlmCodeCompletion
 }
+
+{ #category : #actions }
+GtLlmCodeCompletion >> accept [
+	self coderViewModel coderModel removeAttributeNamed: #codeCompletion.
+	self textEditor styleText
+]
 
 { #category : #accessing }
 GtLlmCodeCompletion >> assistant [
@@ -22,16 +32,25 @@ GtLlmCodeCompletion >> assistant: aGtLlmAssistant [
 ]
 
 { #category : #actions }
-GtLlmCodeCompletion >> callback: aString [
-	GtTranscript default nextPutAll: aString.
+GtLlmCodeCompletion >> callback: aString isDone: aBoolean [
+	GtTranscript default
+		nextPutAll: 'LLM code completion: ';
+		nextPutAll: aString;
+		nextPutAll: ' (done: ';
+		nextPutAll: aBoolean;
+		nextPutAll: ')';
+		cr.
 	self editorElement
-		enqueueTask: (BlTaskAction new action: 
-					[(self editorElement inserter)
+		enqueueTask: (BlTaskAction new
+				action: [ self editorElement inserter
 						at: self cursorPosition;
 						string: aString;
 						withoutSelectionUpdate;
 						withoutSelectionDelete;
-						insert])
+						insert.
+					self stopPosition: self stopPosition + aString size.
+					self isDone: aBoolean.
+					self textEditor styleText ])
 ]
 
 { #category : #accessing }
@@ -61,9 +80,11 @@ GtLlmCodeCompletion >> editorElement: anObject [
 
 { #category : #actions }
 GtLlmCodeCompletion >> generateCompletionOnEditor: aBrTextEditor element: aBrEditorElement [
-	| text prefix suffix prompt streamedResponse |
+	| text prefix suffix prompt |
 	self textEditor: aBrTextEditor.
 	self editorElement: aBrEditorElement.
+	self startPosition: self cursorPosition.
+	self stopPosition: self cursorPosition.
 	text := self textEditor text asString.
 	prefix := text copyFrom: 1 to: self cursorPosition.
 	suffix := text copyFrom: self cursorPosition + 1 to: text size.
@@ -81,6 +102,16 @@ GtLlmCodeCompletion >> generateResponseFor: aPromptString [
 ]
 
 { #category : #accessing }
+GtLlmCodeCompletion >> isDone [
+	^ isDone
+]
+
+{ #category : #accessing }
+GtLlmCodeCompletion >> isDone: anObject [
+	isDone := anObject
+]
+
+{ #category : #accessing }
 GtLlmCodeCompletion >> middleToken [
 	^'<fim_middle>'
 ]
@@ -92,8 +123,8 @@ GtLlmCodeCompletion >> prefixToken [
 
 { #category : #accessing }
 GtLlmCodeCompletion >> promptFor: aPrefixString and: aSuffixString [
-	aSuffixString trimAll ifEmpty: [^aPrefixString].
-	^self prefixToken , aPrefixString , self suffixToken , aSuffixString
+	aSuffixString trimBoth ifEmpty: [ ^ aPrefixString ].
+	^ self prefixToken , aPrefixString , self suffixToken , aSuffixString
 		, self middleToken
 ]
 
@@ -107,14 +138,53 @@ GtLlmCodeCompletion >> provider: anObject [
 	provider := anObject
 ]
 
+{ #category : #actions }
+GtLlmCodeCompletion >> reject [
+	streamedResponse callbackInstance: nil.
+	self editorElement deleter
+		from: self startPosition to: self stopPosition;
+		withoutSelectionUpdate;
+		delete.
+	self coderViewModel coderModel removeAttributeNamed: #codeCompletion.
+	self textEditor styleText
+]
+
+{ #category : #accessing }
+GtLlmCodeCompletion >> startPosition [
+	^ startPosition
+]
+
+{ #category : #accessing }
+GtLlmCodeCompletion >> startPosition: anObject [
+	startPosition := anObject
+]
+
+{ #category : #accessing }
+GtLlmCodeCompletion >> stopPosition [
+	^ stopPosition
+]
+
+{ #category : #accessing }
+GtLlmCodeCompletion >> stopPosition: anObject [
+	stopPosition := anObject
+]
+
 { #category : #accessing }
 GtLlmCodeCompletion >> suffixToken [
 	^'<fim_suffix>'
 ]
 
 { #category : #accessing }
+GtLlmCodeCompletion >> test [
+	"assert that 1 + 1 is equal to 2, 1 + 2 is equal to 3 and 2 + 2 is equal to 4"
+
+	self assert: 1 + 1 equals: 2.
+	self assert: 2 + 2 equals: 4
+]
+
+{ #category : #accessing }
 GtLlmCodeCompletion >> textEditor [
-	^textEditor
+	^ textEditor
 ]
 
 { #category : #accessing }

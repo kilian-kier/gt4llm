@@ -2,7 +2,7 @@ Class {
 	#name : #GtOllamaResponse,
 	#superclass : #Object,
 	#instVars : [
-		'done',
+		'isDone',
 		'content',
 		'rawData'
 	],
@@ -19,11 +19,6 @@ GtOllamaResponse >> content [
 	^content
 ]
 
-{ #category : #accessing }
-GtOllamaResponse >> done [
-	^done
-]
-
 { #category : #'as yet unclassified' }
 GtOllamaResponse >> gtContentFor: aView [
 	<gtView>
@@ -34,9 +29,14 @@ GtOllamaResponse >> gtContentFor: aView [
 		view: #gtLiveFor:
 ]
 
+{ #category : #accessing }
+GtOllamaResponse >> isDone [
+	^ isDone
+]
+
 { #category : #private }
 GtOllamaResponse >> setString: aString [
 	rawData := STONJSON fromString: aString.
-	done := rawData at: 'done'.
+	isDone := rawData at: 'done'.
 	content := rawData at: 'response'
 ]

@@ -138,7 +138,7 @@ GtOllamaProvider >> model [
 GtOllamaProvider >> model: anObject [
 	model := anObject.
 
-	"ignore pulling errors that occur on local models. worst case is we’ll get an issue later when trying to chat"
+	"ignore pulling errors that occur on local models. worst case is we'll get an issue later when trying to chat"
 	[self client pullModel: model] asAsyncPromiseWithUserBackgroundPriority
 ]
 
