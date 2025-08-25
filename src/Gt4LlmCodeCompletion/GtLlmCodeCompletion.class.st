@@ -85,7 +85,7 @@ GtLlmCodeCompletion >> generateCompletionOnEditor: aBrTextEditor element: aBrEdi
 	self editorElement: aBrEditorElement.
 	self startPosition: self cursorPosition.
 	self stopPosition: self cursorPosition.
-	text := self textEditor text asString.
+	text := self textEditor textSnapshot asString.
 	prefix := text copyFrom: 1 to: self cursorPosition.
 	suffix := text copyFrom: self cursorPosition + 1 to: text size.
 	prompt := self promptFor: prefix and: suffix.
