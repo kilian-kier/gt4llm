@@ -83,6 +83,7 @@ GtLlmCodeCompletion >> generateCompletionOnEditor: aBrTextEditor element: aBrEdi
 	| text prefix suffix prompt |
 	self textEditor: aBrTextEditor.
 	self editorElement: aBrEditorElement.
+	self initializeEventHandler.
 	self startPosition: self cursorPosition.
 	self stopPosition: self cursorPosition.
 	text := self textEditor textSnapshot asString.
@@ -99,6 +100,37 @@ GtLlmCodeCompletion >> generateResponseFor: aPromptString [
 		generateStreamingResponseWithModel: self provider model
 		andPrompt: aPromptString
 		andSystem: self assistant systemPrompt
+]
+
+{ #category : #accessing }
+GtLlmCodeCompletion >> initializeEventHandler [
+	self textEditor when: BrTextEditorModifiedEvent
+		do: 
+			[:event |
+			event isDueToInsertion
+				ifTrue: 
+					[event editCommand strings with: event editCommand undoIndices
+						do: 
+							[:eachString :eachIndex |
+							| start stop |
+							start := eachIndex.
+							stop := eachIndex + eachString size.
+							start < self startPosition
+								ifTrue: [self startPosition: self startPosition + eachString size].
+							stop < self stopPosition
+								ifTrue: [self stopPosition: self stopPosition + eachString size]]].
+			event isDueToDeletion
+				ifTrue: 
+					[event editCommand texts with: event editCommand undoIndices
+						do: 
+							[:eachText :eachIndex |
+							| start stop |
+							start := eachIndex.
+							stop := eachIndex + eachText size.
+							start < self startPosition
+								ifTrue: [self startPosition: self startPosition - eachText size].
+							stop < self stopPosition
+								ifTrue: [self stopPosition: self stopPosition - eachText size]]]]
 ]
 
 { #category : #accessing }
@@ -189,32 +221,5 @@ GtLlmCodeCompletion >> textEditor [
 
 { #category : #accessing }
 GtLlmCodeCompletion >> textEditor: anObject [
-	textEditor := anObject.
-	textEditor when: BrTextEditorModifiedEvent
-		do: 
-			[:event |
-			event isDueToInsertion
-				ifTrue: 
-					[event editCommand strings with: event editCommand undoIndices
-						do: 
-							[:eachString :eachIndex |
-							| start stop |
-							start := eachIndex.
-							stop := eachIndex + eachString size.
-							start < self startPosition
-								ifTrue: [self startPosition: self startPosition + eachString size].
-							stop < self stopPosition
-								ifTrue: [self stopPosition: self stopPosition + eachString size]]].
-			event isDueToDeletion
-				ifTrue: 
-					[event editCommand texts with: event editCommand undoIndices
-						do: 
-							[:eachText :eachIndex |
-							| start stop |
-							start := eachIndex.
-							stop := eachIndex + eachText size.
-							start < self startPosition
-								ifTrue: [self startPosition: self startPosition - eachText size].
-							stop < self stopPosition
-								ifTrue: [self stopPosition: self stopPosition - eachText size]]]].
+	textEditor := anObject
 ]

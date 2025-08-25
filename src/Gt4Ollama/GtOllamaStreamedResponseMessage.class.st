@@ -28,9 +28,10 @@ GtOllamaStreamedResponseMessage >> callbackInstance: anObject [
 GtOllamaStreamedResponseMessage >> notifyCallback [
 	| responses |
 	responses := stream responses nextAllOrEmpty.
-	responses ifEmpty: [ ^ self ].
+	responses ifEmpty: [^self].
+	callbackInstance ifNil: [^self].
 	callbackInstance
-		callback: ('' join: (responses collect: [ :e | e content ]))
+		callback: ('' join: (responses collect: [:e | e content]))
 		isDone: responses last isDone
 ]
 
