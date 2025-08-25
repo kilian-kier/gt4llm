@@ -113,12 +113,12 @@ GtLlmCodeCompletion >> isDone: anObject [
 
 { #category : #accessing }
 GtLlmCodeCompletion >> middleToken [
-	^'<fim_middle>'
+	^'<|fim_middle|>'
 ]
 
 { #category : #accessing }
 GtLlmCodeCompletion >> prefixToken [
-	^'<fim_prefix>'
+	^'<|fim_prefix|>'
 ]
 
 { #category : #accessing }
@@ -171,7 +171,7 @@ GtLlmCodeCompletion >> stopPosition: anObject [
 
 { #category : #accessing }
 GtLlmCodeCompletion >> suffixToken [
-	^'<fim_suffix>'
+	^'<|fim_suffix|>'
 ]
 
 { #category : #accessing }
