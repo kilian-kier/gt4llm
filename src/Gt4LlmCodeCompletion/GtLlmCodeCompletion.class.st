@@ -33,7 +33,7 @@ GtLlmCodeCompletion >> assistant: aGtLlmAssistant [
 
 { #category : #actions }
 GtLlmCodeCompletion >> callback: aString isDone: aBoolean [
-	GtTranscript default
+	(GtTranscript default)
 		nextPutAll: 'LLM code completion: ';
 		nextPutAll: aString;
 		nextPutAll: ' (done: ';
@@ -41,8 +41,8 @@ GtLlmCodeCompletion >> callback: aString isDone: aBoolean [
 		nextPutAll: ')';
 		cr.
 	self editorElement
-		enqueueTask: (BlTaskAction new
-				action: [ self editorElement inserter
+		enqueueTask: (BlTaskAction new action: 
+					[(self editorElement inserter)
 						at: self cursorPosition;
 						string: aString;
 						withoutSelectionUpdate;
@@ -50,7 +50,7 @@ GtLlmCodeCompletion >> callback: aString isDone: aBoolean [
 						insert.
 					self stopPosition: self stopPosition + aString size.
 					self isDone: aBoolean.
-					self textEditor styleText ])
+					self textEditor styleText])
 ]
 
 { #category : #accessing }
@@ -189,5 +189,32 @@ GtLlmCodeCompletion >> textEditor [
 
 { #category : #accessing }
 GtLlmCodeCompletion >> textEditor: anObject [
-	textEditor := anObject
+	textEditor := anObject.
+	textEditor when: BrTextEditorModifiedEvent
+		do: 
+			[:event |
+			event isDueToInsertion
+				ifTrue: 
+					[event editCommand strings with: event editCommand undoIndices
+						do: 
+							[:eachString :eachIndex |
+							| start stop |
+							start := eachIndex.
+							stop := eachIndex + eachString size.
+							start < self startPosition
+								ifTrue: [self startPosition: self startPosition + eachString size].
+							stop < self stopPosition
+								ifTrue: [self stopPosition: self stopPosition + eachString size]]].
+			event isDueToDeletion
+				ifTrue: 
+					[event editCommand texts with: event editCommand undoIndices
+						do: 
+							[:eachText :eachIndex |
+							| start stop |
+							start := eachIndex.
+							stop := eachIndex + eachText size.
+							start < self startPosition
+								ifTrue: [self startPosition: self startPosition - eachText size].
+							stop < self stopPosition
+								ifTrue: [self stopPosition: self stopPosition - eachText size]]]].
 ]
