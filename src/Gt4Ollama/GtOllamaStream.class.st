@@ -42,7 +42,7 @@ GtOllamaStream >> isAtEnd [
 
 { #category : #accessing }
 GtOllamaStream >> isReadyForMore [
-	^self stream peek isNotNil
+	^self stream peek notNil
 ]
 
 { #category : #accessing }
